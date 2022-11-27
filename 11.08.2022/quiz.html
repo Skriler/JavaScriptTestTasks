@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Quiz</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+    <div id = "quizApp">
+        <div class="question-card" 
+            v-for="(q, iq) in questions"  
+            v-if="iq === currentIndex"
+            >
+            <h4> {{ q.text }} </h4>
+
+            <div v-for="(v, iv) in q.variants">
+                <input type="radio" 
+                    v-bind:name="iq" 
+                    v-bind:id="getVariantId(iq, iv)"
+                    v-bind:value="iv"
+                    v-model="answers[iq]"
+                    >
+                <label v-bind:for="getVariantId(iq, iv)"> 
+                    {{ v }} 
+                </label>
+            </div>
+
+            <button v-on:click="onButtonClick">Next question</button>
+        </div>
+
+        <div class="question-card" 
+            v-if="currentIndex === questions.length"
+            >
+            <h4>Results:</h4>
+            <p>Correct answers: {{ getCorrectAnswersAmount() }} out of {{ questions.length }} possible</p>
+
+            <div v-if="incorrectAnswersIndex.size > 0">
+                <h4> Incorrect answers: </h4>
+
+                <div class="answer-card" 
+                    v-for="idx in incorrectAnswersIndex"
+                    >
+                    <p> {{ questions[idx].text }} </p>
+                    <p> Your answer: {{ questions[idx].variants[answers[idx]] }} </p>
+                    <p> Correct answer: {{ questions[idx].variants[questions[idx].correct] }} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="quizApp.js"></script>
+</body>
+</html>
